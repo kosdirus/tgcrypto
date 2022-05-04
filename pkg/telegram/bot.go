@@ -14,6 +14,8 @@ import (
 	"time"
 )
 
+var apiPath = os.Getenv("APIPATH")
+
 func RunBot() {
 	var bot *tgbotapi.BotAPI
 	var err error
@@ -55,7 +57,7 @@ func RunBot() {
 			} else {
 				switch {
 				case strings.Contains(text, "sdd"):
-					resp, _ := http.Get(fmt.Sprintf("https://heroku-tool.herokuapp.com/tg/sdd/%s", s[1]))
+					resp, _ := http.Get(fmt.Sprintf("%s/tg/sdd/%s", apiPath, s[1]))
 					body, _ := io.ReadAll(resp.Body)
 					resp.Body.Close()
 					symbolMap := make(map[string]float64)
@@ -102,7 +104,7 @@ func RunBot() {
 					bot.Send(msg)
 					bot.Send(msg1)
 				case strings.Contains(text, "sdu"):
-					resp, _ := http.Get(fmt.Sprintf("https://heroku-tool.herokuapp.com/tg/sdu/%s", s[1]))
+					resp, _ := http.Get(fmt.Sprintf("%s/tg/sdu/%s", apiPath, s[1]))
 					body, _ := io.ReadAll(resp.Body)
 					resp.Body.Close()
 					symbolMap := make(map[string]float64)
@@ -151,7 +153,7 @@ func RunBot() {
 				default:
 					s0 := strings.ToUpper(s[0])
 					s1 := strings.ToLower(s[1])
-					resp, _ := http.Get(fmt.Sprintf("https://heroku-tool.herokuapp.com/tg/%s/%s", s0, s1))
+					resp, _ := http.Get(fmt.Sprintf("%s/tg/%s/%s", apiPath, s0, s1))
 					body, _ := io.ReadAll(resp.Body)
 					resp.Body.Close()
 					var test *CandleResponse

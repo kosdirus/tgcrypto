@@ -62,6 +62,7 @@ jobs:
             # Set env variables
             export TGTOKENENVFILE=${{ secrets.TGTOKENENVFILE }}
             export ENV=${{ secrets.ENV }}
+            export APIPATH=${{ secrets.APIPATH }}
             
             # Run a new container from a new image
             docker run -e TGTOKENENVFILE -e ENV -d \
