@@ -4,3 +4,5 @@
 .env
 
 *.db
+/config.go
+/logs.txt
