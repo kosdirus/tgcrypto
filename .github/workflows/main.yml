@@ -68,5 +68,8 @@ jobs:
             docker run -e TGTOKENENVFILE -e ENV -e APIPATH -d \
             --restart always \
             --publish 8081:8081 \
+            --interactive \
+            --tty \
+            --detach-keys="ctrl-d" \
             --name $(echo $CONTAINER_NAME) \
             $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
