@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-var apiPath = os.Getenv("APIPATH")
+var apiPath string
 
 func RunBot() {
 	var bot *tgbotapi.BotAPI
@@ -24,11 +24,12 @@ func RunBot() {
 		if err != nil {
 			log.Panic(err)
 		}
-	} else if os.Getenv("ENV") == "DOCKER" {
+	} else if os.Getenv("ENV") == "DIGITAL" {
 		bot, err = tgbotapi.NewBotAPI(os.Getenv("TGTOKENENVFILE"))
 		if err != nil {
 			log.Panic(err)
 		}
+		apiPath = os.Getenv("APIPATH")
 	} else {
 		bot, err = tgbotapi.NewBotAPI(os.Getenv("TGTOKENENVFILE"))
 		if err != nil {
@@ -39,7 +40,7 @@ func RunBot() {
 	bot.Debug = true
 
 	log.Printf("Authorized on account %s", bot.Self.UserName)
-
+	log.Println(apiPath)
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 
@@ -57,7 +58,9 @@ func RunBot() {
 			} else {
 				switch {
 				case strings.Contains(text, "sdd"):
-					resp, _ := http.Get(fmt.Sprintf("%s/tg/sdd/%s", apiPath, s[1]))
+					strForGet := fmt.Sprintf("%s/tg/sdd/%s", apiPath, s[1])
+					log.Println("apiPath:", apiPath, "string for GET:", strForGet)
+					resp, _ := http.Get(strForGet)
 					body, _ := io.ReadAll(resp.Body)
 					resp.Body.Close()
 					symbolMap := make(map[string]float64)
