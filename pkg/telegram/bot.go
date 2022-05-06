@@ -19,11 +19,12 @@ var apiPath string
 func RunBot() {
 	var bot *tgbotapi.BotAPI
 	var err error
-	if os.Getenv("ENV") == "PROD" {
-		bot, err = tgbotapi.NewBotAPI(os.Getenv("TGTOKEN"))
+	if os.Getenv("ENV") == "LOCAL" {
+		bot, err = tgbotapi.NewBotAPI(os.Getenv("TGTOKENENVFILE"))
 		if err != nil {
 			log.Panic(err)
 		}
+		apiPath = os.Getenv("APIPATH")
 	} else if os.Getenv("ENV") == "DIGITAL" {
 		bot, err = tgbotapi.NewBotAPI(os.Getenv("TGTOKENENVFILE"))
 		if err != nil {
@@ -31,10 +32,7 @@ func RunBot() {
 		}
 		apiPath = os.Getenv("APIPATH")
 	} else {
-		bot, err = tgbotapi.NewBotAPI(os.Getenv("TGTOKENENVFILE"))
-		if err != nil {
-			log.Panic(err)
-		}
+		log.Panic("unknown ENV")
 	}
 
 	bot.Debug = true
@@ -57,7 +55,7 @@ func RunBot() {
 				bot.Send(msg)
 			} else {
 				switch {
-				case strings.Contains(text, "sdd"):
+				case strings.Contains(strings.ToLower(text), "sdd"):
 					strForGet := fmt.Sprintf("%s/tg/sdd/%s", apiPath, s[1])
 					log.Println("apiPath:", apiPath, "string for GET:", strForGet)
 					resp, _ := http.Get(strForGet)
@@ -106,7 +104,7 @@ func RunBot() {
 
 					bot.Send(msg)
 					bot.Send(msg1)
-				case strings.Contains(text, "sdu"):
+				case strings.Contains(strings.ToLower(text), "sdu"):
 					resp, _ := http.Get(fmt.Sprintf("%s/tg/sdu/%s", apiPath, s[1]))
 					body, _ := io.ReadAll(resp.Body)
 					resp.Body.Close()
